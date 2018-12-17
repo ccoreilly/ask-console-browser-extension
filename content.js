@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     initButtons();
 
-    $('input#astro-radio-1').on('change', function () {
+    $('div.astro-form-group-fields label:first-child input').on('change', function () {
         initButtons();
     });
 
@@ -246,11 +246,11 @@ function addToHistory(text) {
 
 function draggableSideBar() {
     $('.askt-input').append('<div id="dragbar"></div>');
-    const dragging = false;
+    let dragging = false;
    $('#dragbar').on('mousedown', function(e) {
        e.preventDefault();
-       dragging = true;       
-       $(document).on('mousemove', function(e){
+       dragging = true;
+       $(document).on('mousemove', function(e) {
            const percentage = (e.pageX / window.innerWidth) * 100;
            const mainPercentage = 100 - percentage;
            $('.askt-input').css("width", percentage + "%");
