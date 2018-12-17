@@ -38,7 +38,7 @@ function initButtons() {
         $('<div class="request-buttons"></div>').insertAfter('.askt-simulator__input');
     }
     $('.request-buttons').html('');
-    chrome.storage.sync.get([skillId], function(result) {
+    chrome.storage.local.get([skillId], function(result) {
         if (result && result[skillId] && result[skillId].buttons) {
             localeButtons = result[skillId].buttons[locale];
             if (localeButtons) {
@@ -83,7 +83,7 @@ function initButtons() {
     });
 
     $(".askt-utterance__input").keydown(function(e) {
-        chrome.storage.sync.get([skillId], function(result) {
+        chrome.storage.local.get([skillId], function(result) {
             if (result && result[skillId] && result[skillId].history) {
                 commandHistory = result[skillId].history[locale];
                 if(commandHistory) {
@@ -119,11 +119,11 @@ function addButton(button) {
  * @param button
  */
 function removeButton(button) {
-    chrome.storage.sync.get([skillId], function(result) {
+    chrome.storage.local.get([skillId], function(result) {
         if (result && result[skillId] && result[skillId].buttons) {
             result[skillId].buttons[locale] = result[skillId].buttons[locale].filter((text) => text !== button);
 
-            chrome.storage.sync.set({[skillId]: result[skillId]}, function() {
+            chrome.storage.local.set({[skillId]: result[skillId]}, function() {
                 $('.request-buttons button[value="'+button+'"]').parent().remove();
                 localeButtons = result[skillId].buttons[locale];
             });
@@ -157,7 +157,7 @@ function postText(text) {
 function saveButton(text) {
 
     // get object for given skill id
-    chrome.storage.sync.get([skillId], function(result) {
+    chrome.storage.local.get([skillId], function(result) {
         if (result && result[skillId] && result[skillId].buttons) {
             localeButtons = result[skillId].buttons[locale];
 
@@ -169,14 +169,14 @@ function saveButton(text) {
             } else {
                 result[skillId].buttons[locale] = [text];
             }
-            chrome.storage.sync.set({[skillId]: result[skillId]}, function () {
+            chrome.storage.local.set({[skillId]: result[skillId]}, function () {
                 addButton(text);
             });
         } else if (result && result[skillId]) {
             result[skillId].buttons = {
                 [locale]: [text]
             };
-            chrome.storage.sync.set({[skillId]: result[skillId]}, function () {
+            chrome.storage.local.set({[skillId]: result[skillId]}, function () {
                 addButton(text);
             });
         } else { // create new object for given skill id
@@ -188,7 +188,7 @@ function saveButton(text) {
                     [locale]: []
                 },
             };
-            chrome.storage.sync.set({[skillId]: obj}, function() {
+            chrome.storage.local.set({[skillId]: obj}, function() {
                 addButton(text);
             });
         }
@@ -201,7 +201,7 @@ function saveButton(text) {
 */
 function addToHistory(text) {
     // Get object for given skill id
-    chrome.storage.sync.get([skillId], function(result) {
+    chrome.storage.local.get([skillId], function(result) {
         // Set index back to starting point
         historyIndex = -1;
         if (result && result[skillId] && result[skillId].history) {
@@ -220,14 +220,14 @@ function addToHistory(text) {
             } else {
                 result[skillId].history[locale] = [text];
             }
-            chrome.storage.sync.set({[skillId]: result[skillId]});
+            chrome.storage.local.set({[skillId]: result[skillId]});
         } else if (result && result[skillId]) { // create new object for given skill id
 
             result[skillId].history = {
                 [locale]: [text]
             };
 
-            chrome.storage.sync.set({[skillId]: result[skillId]});
+            chrome.storage.local.set({[skillId]: result[skillId]});
         } else {
             const obj = {
                 buttons: {
@@ -237,10 +237,10 @@ function addToHistory(text) {
                     [locale]: [text]
                 },
             };
-            chrome.storage.sync.set({[skillId]: obj})
+            chrome.storage.local.set({[skillId]: obj})
         }
     });
 }
 // clears storage
-// chrome.storage.sync.clear(function(result) {
+// chrome.storage.local.clear(function(result) {
 // });
