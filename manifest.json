@@ -12,5 +12,6 @@
     "js":         ["jquery-3.2.1.min.js", "content.js"],
     "css" : ["style.css"]
   }],
-  "permissions": ["storage"]
+  "permissions": ["storage"],
+  "web_accessible_resources" : ["script"]
 }

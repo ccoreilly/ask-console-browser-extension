@@ -13,8 +13,8 @@ $(document).ready(function () {
 
     initButtons();
 
-    $('.askt-input div.astro-form-group-fields label:first-child input').on('change', function () {
-        initButtons();
+    $('.askt-input .astro-form-group-fields input').on('change', function () {
+        togglePanels();
     });
 
     $("body").on('DOMSubtreeModified', ".askt-alexa-lang .Select-control .Select-value-label", function() {
@@ -241,6 +241,58 @@ function addToHistory(text) {
         }
     });
 }
-// clears storage
-// chrome.storage.sync.clear(function(result) {
-// });
+
+function draggableSideBar() {
+    $('.askt-input').append('<div id="dragbar"></div>');
+    let dragging = false;
+   $('#dragbar').on('mousedown', function(e) {
+       e.preventDefault();
+       dragging = true;
+       $(document).on('mousemove', function(e) {
+           const percentage = (e.pageX / window.innerWidth) * 100;
+           const mainPercentage = 100 - percentage;
+           $('.askt-input').css("width", percentage + "%");
+           $('.askt-output').css("width", mainPercentage + "%");
+       });
+    });
+
+   $(document).on('mouseup', function(e){
+       if (dragging) {
+           $(document).unbind('mousemove');
+           dragging = false;
+       }
+    });
+}
+
+function togglePanels() {
+    if ($('.askt-input .astro-form-group-fields label:nth-child(3) input').prop('checked')) {
+        $('.askt-output .askt-panel-container').hide();
+        initSSML();
+        $('.ssml-history').show();
+    } else {
+        $('.ssml-history').hide();
+        $('.askt-output .askt-panel-container').show();
+        initButtons();
+    }
+}
+
+function initSSML() {
+    if ($('div.ssml-history').length === 0) {
+        $('<div class="ssml-history"></div>').insertAfter('.askt-panel-container');
+        $('.ssml-history').html('');
+        injectScript( chrome.extension.getURL('/script.js'), 'body');
+    }
+    $('.askt-ssml__button').on('click', function(e) {
+        const ssmlText = $('#ssml-text').html();
+        const playButton = '<i class="astro-icon icon-play askt-dialog__icon askt-dialog__icon--play"><svg height="24" width="24" viewBox="0 0 24 24"><polygon points="0 20 14 10 0 0" transform="translate(5 2)"></polygon></svg></i>';
+        $('.ssml-history').append(`<pre class="ssml-history-elem">${playButton}<code>${ssmlText}</code></pre>`);
+    });
+}
+
+function injectScript(file, node) {
+    var th = document.getElementsByTagName(node)[0];
+    var s = document.createElement('script');
+    s.setAttribute('type', 'text/javascript');
+    s.setAttribute('src', file);
+    th.appendChild(s);
+}

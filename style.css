@@ -45,3 +45,36 @@ span.repost {
 span.save {
     left: -68px;
 }
+
+div#dragbar {
+    background-color:transparent;
+    height:100%;
+    float: right;
+    width: 2px;
+    cursor: col-resize;
+} 
+
+div.ssml-history {
+    flex: 1;
+    padding: 1.5em;
+    overflow: auto;
+    max-height: 100%;
+    align-self: flex-start;
+    width: 100%;
+    position: relative;
+}
+
+pre.ssml-history-elem {
+    padding: 8px;
+    width: 100%;
+}
+
+pre.ssml-history-elem code {
+    padding: 12px;
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    color: #fafafa;
+    background: rgba(0, 172, 224, 1);
+    display: inline-block;
+    margin-left: 12px;
+}
